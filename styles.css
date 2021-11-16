@@ -106,6 +106,25 @@ body {
   color: var(--light);
 }
 
+/* Skip video forward/backward controls */
+.skipContols {
+  position: absolute;
+  top: 0;
+  bottom: 32px;
+  left: 0;
+  right: 0;
+}
+
+.skipContols .skip {
+  width: 35%;
+  height: 100%;
+  display: inline-block;
+}
+
+.skipContols .skip.forward {
+  float: right;
+}
+
 /* Media Queries */
 @media only screen and (min-width: 720px) {
   .video-container {

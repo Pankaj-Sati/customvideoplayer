@@ -5,16 +5,67 @@ const progressBar = document.getElementById("progressBar");
 const timestamp = document.getElementById("timestamp");
 const videoPlayerControls = document.getElementById("videoPlayerControls");
 const controlsContainer = document.getElementById("controlsContainer"); //Listenes for mouse in/out events
+const skipControls = document.getElementById("skipContols"); //Listenes for double click events
+
+//Configuration object mapping the DOM element ids
+const config = {
+  backwardSkipEl: "backwardSkip",
+  forwardSkipEl: "forwardSkip",
+  skipDurationSec: 10,
+  videoSkipDebounceMilli: 200,
+  controlsDebounceMilli: 3000,
+};
 
 videoPlayer.addEventListener("play", toggleVideoPlayerIcons);
 videoPlayer.addEventListener("pause", toggleVideoPlayerIcons);
 videoPlayer.addEventListener("timeupdate", updateVideoProgress);
+videoPlayer.addEventListener("touchstart", showControls);
 
 playButton.addEventListener("click", toggleVideoPlayback);
 
 stopButton.addEventListener("click", stopVideoPlayback);
 
 progressBar.addEventListener("change", progressChanged);
+
+//Adding video skip forward/backward controls
+const videoSkipDebounce = new Debounce(config.videoSkipDebounceMilli); //We will listen for double click
+let doubleClickCounter = 0; //Used to deduce a double click event
+skipControls.addEventListener("click", (event) => {
+  /**
+   * Logic
+   * We increment the click counter if user clicks on forward skip element
+   * And decrement the click counter for backward skip element
+   * For each click, we re-start a debounce
+   * When debounce completes, we check if the click counter is >=+2 : Forward skip
+   * Else if click counter was <=-2, then backward skip
+   * Finally, we reset the counter value back to 0
+   *
+   * If we click only once, then debounce will complete with counter value 1 or -1 and reset
+   * itself back to 0
+   */
+  if (event.target.id === config.forwardSkipEl) {
+    if (doubleClickCounter < 0) {
+      doubleClickCounter = 0;
+    }
+    doubleClickCounter++;
+  } else if (event.target.id === config.backwardSkipEl) {
+    if (doubleClickCounter > 0) {
+      doubleClickCounter = 0;
+    }
+    doubleClickCounter--;
+  }
+
+  videoSkipDebounce.start().onComplete(() => {
+    if (doubleClickCounter >= 2) {
+      //Double clicked Forward
+      skipVideo(true);
+    } else if (doubleClickCounter <= -2) {
+      //  Double clicked Backward
+      skipVideo(false);
+    }
+    doubleClickCounter = 0;
+  });
+});
 
 // Adding mouse in/out event on controls backdrop
 controlsContainer.addEventListener("mouseenter", showControls);
@@ -26,10 +77,10 @@ function showControls() {
 
 controlsContainer.addEventListener("mouseleave", hideControls);
 
-const debounce = new Debounce(3000); //3 Seconds debounce
+const videoControlsDebounce = new Debounce(config.controlsDebounceMilli); //3 Seconds debounce
 // Hide Controls
 function hideControls() {
-  debounce.start().onComplete(() => {
+  videoControlsDebounce.start().onComplete(() => {
     videoPlayerControls.style.bottom = "-24px";
   });
 }
@@ -102,6 +153,18 @@ function progressChanged() {
   const progressPercent = +progressBar.value;
   videoPlayer.currentTime = (progressPercent * videoPlayer.duration) / 100;
   convertTime(videoPlayer.currentTime);
+}
+
+/**
+ * Skips a video forward or backward
+ * @param {*} isForward boolean
+ */
+function skipVideo(isForward) {
+  if (isForward) {
+    videoPlayer.currentTime += config.skipDurationSec;
+  } else {
+    videoPlayer.currentTime -= config.skipDurationSec;
+  }
 }
 
 /**
