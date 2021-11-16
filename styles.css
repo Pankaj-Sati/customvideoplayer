@@ -1,0 +1,115 @@
+@import url("https://use.fontawesome.com/releases/v5.13.0/css/all.css");
+
+:root {
+  font-size: 14px;
+  --primary: hsl(192, 23%, 25%);
+  --success: hsl(128, 42%, 47%);
+  --error: hsl(0, 42%, 47%);
+  --light: hsl(0, 0%, 91%);
+  --breakpoint-mobile: 480px;
+  --breakpoint-tablet: 720px;
+  --breakpoint-desktop: 1366px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background-color: var(--primary);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Main Container */
+.container {
+  width: 90vw;
+}
+
+/* Into Heading */
+.pageIntro {
+  text-transform: uppercase;
+  text-align: center;
+  margin: 10px 0;
+  color: var(--light);
+}
+
+/* Video & controls container */
+.video-container {
+  position: relative;
+  overflow-y: hidden;
+  width: 90vw;
+}
+
+/* Video Player */
+.videoPlayer {
+  width: 100%;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+
+/* Controls */
+
+.controls-container {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  min-height: 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.controls {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 2px;
+  transition: all 0.8s;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.controls > button {
+  background: none;
+  border: unset;
+  outline: unset;
+  cursor: pointer;
+}
+
+.controls > button[id="btnPlay"] {
+  color: var(--success);
+}
+
+.controls > button[id="btnStop"] {
+  color: var(--error);
+}
+
+/* Progress */
+.controls .progressRange {
+  width: 100%;
+  cursor: pointer;
+}
+
+/* Timestamp */
+.controls .time {
+  margin-left: 5px;
+  color: var(--light);
+}
+
+/* Media Queries */
+@media only screen and (min-width: 720px) {
+  .video-container {
+    width: 60vw;
+    margin: auto;
+  }
+}
