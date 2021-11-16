@@ -125,6 +125,14 @@ body {
   float: right;
 }
 
+.skipContols .skip .skip-icon {
+  color: var(--light);
+  margin-top: 60%;
+  margin-left: 50%;
+  visibility: hidden;
+  transition: visibility 500ms;
+}
+
 /* Media Queries */
 @media only screen and (min-width: 720px) {
   .video-container {

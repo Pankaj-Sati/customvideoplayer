@@ -11,6 +11,7 @@ const skipControls = document.getElementById("skipContols"); //Listenes for doub
 const config = {
   backwardSkipEl: "backwardSkip",
   forwardSkipEl: "forwardSkip",
+  skipIconEl: "skip-icon",
   skipDurationSec: 10,
   videoSkipDebounceMilli: 200,
   controlsDebounceMilli: 3000,
@@ -162,8 +163,18 @@ function progressChanged() {
 function skipVideo(isForward) {
   if (isForward) {
     videoPlayer.currentTime += config.skipDurationSec;
+    animateIcon(
+      document
+        .getElementById(config.forwardSkipEl)
+        .querySelector(`.${config.skipIconEl}`)
+    );
   } else {
     videoPlayer.currentTime -= config.skipDurationSec;
+    animateIcon(
+      document
+        .getElementById(config.backwardSkipEl)
+        .querySelector(`.${config.skipIconEl}`)
+    );
   }
 }
 
@@ -205,4 +216,18 @@ function Debounce(milliseconds) {
 
     callbackFn = callback; //Saving reference to the call back function
   };
+}
+
+/**
+ * Animates the fading of icon on a DOM element
+ * @param {*} iconElement Element used for displaying icon
+ */
+function animateIcon(iconElement) {
+  if (!iconElement) {
+    throw new Error("Unknown icon to animate");
+  }
+  iconElement.style.visibility = "visible";
+  setTimeout(() => {
+    iconElement.style.visibility = "hidden";
+  }, config.videoSkipDebounceMilli);
 }
