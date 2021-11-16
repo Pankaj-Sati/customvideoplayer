@@ -227,7 +227,9 @@ function animateIcon(iconElement) {
     throw new Error("Unknown icon to animate");
   }
   iconElement.style.visibility = "visible";
+  iconElement.style.opacity = "1";
   setTimeout(() => {
     iconElement.style.visibility = "hidden";
+    iconElement.style.opacity = "0";
   }, config.videoSkipDebounceMilli);
 }

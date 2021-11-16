@@ -130,7 +130,8 @@ body {
   margin-top: 60%;
   margin-left: 50%;
   visibility: hidden;
-  transition: visibility 500ms;
+  opacity: 0;
+  transition: opacity ease-out;
 }
 
 /* Media Queries */
